@@ -4,8 +4,17 @@
 inventory = 0
 
 #Requirement 2
-stock = ""
-
-while stock != "quit":
+while True:
     #Get User Input and "Clean" It
     stock = input("Enter a stock quantity: ").lower().strip()
+
+    if stock == "quit":
+        break;
+
+    #Requirement 4
+    if stock.isdigit() == False:
+        print("Error: '" + stock + "' is not a valid numerical input!")
+        continue
+
+    #Requirement 3
+    stock = int(stock)
