@@ -10,7 +10,6 @@ while True:
     stock = input("Enter a stock quantity: ").lower().strip()
 
     if stock == "quit":
-        failedEntriesCounter += 1
         break;
 
     #Requirement 4 and Requirement 5
