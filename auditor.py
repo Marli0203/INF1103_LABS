@@ -14,7 +14,7 @@ while True:
 
     #Requirement 4 and Requirement 5
     if stock.isdigit() == False or int(stock) < 0:
-        print("Error: '" + stock + "' is not a valid numerical input!")
+        print("Error: '" + stock + "' is not a valid input!")
         failedEntriesCounter += 1
         continue
 
