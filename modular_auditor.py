@@ -17,7 +17,7 @@ def process_delivery(current_total: int, new_value: int):
     return current_total
 
 def calculate_tax(amount: float):
-    return
+    return amount * 0.1
 
 def generate_report(total_units: int, failed_attempts: int):
     return
@@ -45,6 +45,9 @@ while True:
         break;
     
     inventory = process_delivery(inventory, int(user_input))
+
+# Lab3: Requirement 3
+calculate_tax(inventory)
 
 # Lab2: Requirement 8
 print("\nTotal Units Processed:", inventory, "\nNumber of Failed Entries:", failedEntriesCounter)
