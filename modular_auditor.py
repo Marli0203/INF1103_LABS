@@ -1,8 +1,16 @@
 #This is the code for INF 1103 Lab 2
 
 # Defining Functions
-def get_valid_input():
-    return
+def get_valid_input(failedEntriesCounter):
+    # Prompt User for Input
+    user_input = input("Enter a stock quantity: ").lower().strip()
+
+    # Check For Invalid Input
+    if user_input != "quit" and (user_input.isdigit() == False or int(user_input) <= 0):
+        print("Error: '" + user_input + "' is not a valid input!") # Print Error Message
+        failedEntriesCounter += 1
+        user_input, failedEntriesCounter = get_valid_input(failedEntriesCounter); #Re-prompt
+    return user_input, failedEntriesCounter
 
 def process_delivery(current_total: int, new_value: int):
     return
@@ -19,20 +27,13 @@ failedEntriesCounter = 0
 
 #Requirement 2
 while True:
-    #Get User Input and "Clean" It
-    stock = input("Enter a stock quantity: ").lower().strip()
-
-    if stock == "quit":
+    # Lab3: Requirement 1
+    user_input, failedEntriesCounter = get_valid_input(failedEntriesCounter)
+    if user_input == "quit":
         break;
 
-    #Requirement 4 and Requirement 5
-    if stock.isdigit() == False or int(stock) < 0:
-        print("Error: '" + stock + "' is not a valid input!")
-        failedEntriesCounter += 1
-        continue
-
     #Requirement 3
-    stock = int(stock)
+    stock = int(user_input)
 
     #Requirement 6
     inventory += stock
