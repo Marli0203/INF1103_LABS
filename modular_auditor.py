@@ -20,17 +20,18 @@ def calculate_tax(amount: float):
     return amount * 0.1
 
 def generate_report(total_units: int, failed_attempts: int):
+    print("\nTotal Units Processed:", total_units, "\nTotal Tax:", calculate_tax(float(total_units)), "\nNumber of Failed Entries:", failed_attempts)
     return
 
 # Lab2: Requirement 1
 inventory = 0
 failedEntriesCounter = 0
 
-# Lab2: Requirement 2
 while True:
     # Lab3: Requirement 1
     user_input = get_valid_input()
 
+    # Lab2: Requirement 2
     if user_input == "quit":
         break;
     
@@ -46,8 +47,5 @@ while True:
     
     inventory = process_delivery(inventory, int(user_input))
 
-# Lab3: Requirement 3
-calculate_tax(inventory)
-
-# Lab2: Requirement 8
-print("\nTotal Units Processed:", inventory, "\nNumber of Failed Entries:", failedEntriesCounter)
+# Lab3: Requirement 4 (Requirement 3 in line 23)
+generate_report(inventory, failedEntriesCounter)
