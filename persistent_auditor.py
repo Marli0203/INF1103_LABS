@@ -31,15 +31,33 @@ def load_inventory():
     transaction_history = file.readlines()
     file.close()
 
-    return transaction_history
+    # Create a nested list
+    transactions = []
+    for entry in transaction_history:
+        transactions.append(list(entry.split(",")))
+    return transactions
 
-# Variable Initialization
-inventory = 0
+# === Variable Initialization ===
+
+# Load And Store Inventory Into Variable
+inventory = load_inventory()
+
+# Get Total Inventory Count
+inventory_count = 0
+for entry in inventory:
+    inventory_count += int(entry[2])
+
 failedEntriesCounter = 0
 
-transaction_history = load_inventory()
-
+# Main Program Flow
 while True:
+    # Display Orders
+    print("Current Orders:\n")
+    for entry in inventory:
+        print(entry[0] + "," + entry[1] + "," + entry[2])
+
+    
+    
     user_input = get_valid_input()
 
     if user_input == "quit":
@@ -49,11 +67,11 @@ while True:
         failedEntriesCounter += 1
         continue
 
-    if process_delivery(inventory, int(user_input)) > 500:
+    if process_delivery(inventory_count, int(user_input)) > 500:
         print("Alert: Total inventory has exceeded 500 units!")
         failedEntriesCounter += 1
         break;
     
-    inventory = process_delivery(inventory, int(user_input))
+    inventory = process_delivery(inventory_count, int(user_input))
 
-generate_report(inventory, failedEntriesCounter)
+generate_report(inventory_count, failedEntriesCounter)
