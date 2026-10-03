@@ -1,128 +1,241 @@
-# Defining Functions
-def get_valid_input():
-    # Prompt User for Product Name
-    product_name = input("\nEnter Product Name: ")
-
-    # Check at this stage if user wants to quit
-    if product_name.lower().strip() == "quit":
-        return "quit", 0
-
-    # Prompt User for Quantity
-    quantity = input("Enter Quantity: ").lower().strip()
-
-    # Check For Invalid Input
-    if quantity != "quit" and (quantity.isdigit() == False or int(quantity) <= 0):
-        print("Error: '" + quantity + "' is not a valid input!") # Print Error Message
-        quantity = "invalid"
-    return product_name, quantity
-
-def process_delivery(current_total: int, new_value: int):
-    # Add New Value To Current Total
-    current_total += new_value
-    return current_total
-
-def calculate_tax(amount: float):
-    return round(amount * 0.1, 2)
-
-def generate_report(total_units: int, failed_attempts: int):
-    print("\nTotal Units Processed:", total_units, "\nTotal Tax:", calculate_tax(float(total_units)), "\nNumber of Failed Entries:", failed_attempts)
-    return
+from pathlib import Path
+import json
 
 def load_inventory():
-    # Create file if it does not exist
-    file = open(".\\INF1103-Labs\\inventory.txt", "a")
-    file.close()
+    '''
+    1.  Find the inventory file.
+    2.  If found, display success message.
+        If not found, display missing message,
+        create inventory file.
+    3.  Load the inventory.
+    4.  Return the inventory list.
+    '''
+    inventory = None
+    
+    # Step 1.
+    inventory_Path = Path(".\\inventory.json")
 
-    # Load transaction history
-    file = open(".\\INF1103-Labs\\inventory.txt", "r")
-    transaction_history = file.readlines()
-    file.close()
+    # Step 2.
+    if inventory_Path.is_file():
+        # If file exists
+        print("inventory.json found.")
+        file = open(".\\inventory.json", "r")
+        inventory = json.load(file)
+        file.close()
+    else:
+        # If file does not exist
+        print("inventory.json not found.")
 
-    # Create a nested list
-    transactions = []
-    for entry in transaction_history:
-        transactions.append(list(entry.split(",")))
+        # Create file if it does not exist
+        file = open(".\\inventory.json", "a")
+        json.dump([], file)
+        file.close()
+        print("inventory.json created successfully.")
         
-    return transactions
+        # Load transaction history
+        file = open(".\\inventory.json", "r")
+        inventory = json.load(file)
+        file.close()
 
-def save_inventory(transaction):
-    # Open the file to append existing file
-    with open(".\\INF1103-Labs\\inventory.txt", "a") as file:
-        # Write the transaction into inventory.txt,
-        # making sure to leave a new line for
-        # future additions to the inventory.txt file
-        file.write(transaction + "\n")
+    # Step 3. Load into inventory
+    print("Inventory loaded successfully.\n")
 
-# === Variable Initialization ===
+    return inventory
 
-# Track Inventory
-inventory = []
+def get_Valid_Input():
+    '''
+    1. Prompt for user input
+    2. Loop while user input is NOT digit AND NOT within range 
+    3. Re-prompt
+    4. Return validated user input
+    '''
+    # 1. Prompt for user input
+    user_Input = input("\nEnter Option: ").lower().strip()
 
-# Track inventory count
-inventory_count = 0
+    # 2. Loop while user input is NOT digit and NOT within range
+    while user_Input.isdigit() == False or int(user_Input) > 6 or int(user_Input) < 1:
+        # 3. Re-prompt for user input
+        print(user_Input + " is not a valid option!")
+        user_Input = input("\nEnter Option: ").lower().strip()
 
-# Track the quantity that has been processed
-processed_quantity = 0
+    # 4. Return validated user input
+    return int(user_Input)
 
-# Track the number of failed attempts
-failedEntriesCounter = 0
+# Function for Option 1
+def display_All_Products(inventory):
+    '''
+    1. Display "Current Inventory" title and top line
+    2. Loop through inventory and print product
+    3. Display the bottom line
+    '''
+    # 1. Display title and line
+    print("Current Inventory\n" +
+          "----------------------------------------")
 
-# === Main Program Flow ===
-while True:
-    # Load And Store Inventory Into Variable
-    inventory = load_inventory()
+    # 2. Loop through inventory and print product
+    for product in inventory:
+        print("ID: " + product["ID"] + "|" +
+              "Name: " + product["Name"] + "|" +
+              "Price: $" + product["Price"] + "|" + 
+              "Stock: " + product["Stock"])
 
-    # Get Total Inventory Count
-    inventory_count = 0
-    for entry in inventory:
-        # When new inventory file is initialized,
-        # the data is empty. This will cause
-        # problems when performing inventory count
-        # as the entry will be empty. Cannot convert
-        # empty into integer. So check if it is
-        # not empty before converting to integer
-        if len(entry) == 3:
-            inventory_count += int(entry[2])
+    # 3. Print bottom line
+    print("----------------------------------------\n")
 
-    # Display Orders
-    print("Current Orders:\n")
+# Function for Option 2
+def add_Product(inventory):
+    '''
+    1. Display "Add New Product"
+    2. Prompt for the inputs
+    3. Compile into a dictionary
+    4. Add to inventory
+    5. Display "product added successfully!
+    '''
+    # 1. Display "Add New Product"
+    print("\nAdd New Product")
 
-    # Loop through each line in the text file
-    for entry in inventory:
-        # Print the 'ID', 'Product Name' and 'Quantity'. Remove the '\n'
-        # so that the list is neater
-        print((entry[0] + "," + entry[1] + "," + entry[2]).replace('\n', ''))
+    # 2. Prompt for the inputs
+    product_ID = input("Product ID: ").strip()
+    product_Name = input("Product Name: ").strip()
+    price = input("Price: ").lower().strip()
+    stock_Quantity = input("Stock: ").lower().strip()
 
-    # Get Product Name and Quantity
-    product_name, quantity = get_valid_input()
+    # 3. Compile data into a dictionary
+    product_Data = {"ID" : product_ID,
+                    "Name" : product_Name,
+                    "Price" : price,
+                    "Stock" : stock_Quantity}
 
-    # If user wants to quit, break the loop
-    if product_name == "quit" or quantity == "quit":
-        break;
+    # 4. Add to inventory
+    inventory.append(product_Data)
 
-    # If quantity is invalid, add to counter
-    if quantity == "invalid":
-        failedEntriesCounter += 1
-        continue
+    # 5. Print Success Message
+    print("Product added successfully!")
 
-    # The inputs are valid. Check for inventory overflow
-    if process_delivery(inventory_count, int(quantity)) > 500:
-        print("Alert: Total inventory has exceeded 500 units!")
-        failedEntriesCounter += 1
-        break;
+    # 6. Return inventory
+    return inventory
 
-    # No inventory overflow. Now it is safe to call save_inventory()
-    # Create transaction string
-    transaction_string = str(len(inventory) + 1) + "," + product_name + "," + quantity
-    save_inventory(transaction_string)
+# Function for Option 3
+def update_Stock(inventory):
+    '''
+    1. Display "Update Stock"
+    2. Prompt for product id
+    3. Search through inventory for product using id
+    4. If not found, show missing message then exit
+    5. If found, Display product details
+    6. Prompt for stock quantity (new)
+    7. Update stock quantity
+    8. Display "Stock updated successfully!"
+    9. Return inventory
+    '''
+    # 1. Display "update Stock"
+    print("\nUpdate Stock")
 
-    # Update the Processed Quantity, only after saving to inventory.txt
-    processed_quantity = process_delivery(processed_quantity, int(quantity))
+    # 2. Prompt for Product ID
+    product_ID_Search = input("Enter Product ID: ").strip().lower()
 
-    # Display 'New Order Added'
-    print("\nNew Order Added:\n" + transaction_string)
+    # 3. Search through inventory for a matching ID
+    match_Found = None
+    index_In_Inventory = -1
+    for product in inventory:
+        index_In_Inventory +=1
+        if product_ID_Search == product["ID"].lower():
+            match_Found = product
+            break;
 
-    # Display "Order successfully saved to inventory.txt"
-    print("\nOrder successfully saved to inventory.txt\n")
+    # 4. If not found, show missing message then exit
+    if match_Found == None:
+        print("Product not found\n")
+        return inventory
 
-generate_report(processed_quantity, failedEntriesCounter)
+    # 5. If found, display product details
+    print("\nProduct Found:" + 
+          "\nName: " + match_Found["Name"] +
+          "\nCurrent Stock: " + match_Found["Stock"] + "\n")
+
+    # 6. Prompt for Stock Quantity (New)
+    new_Stock = input("New Stock Quantity: ").strip()
+
+    # 7. Update Stock Quantity
+    inventory[index_In_Inventory]["Stock"] = new_Stock
+
+    # 8. Display successful message
+    print("Stock updated successfully!")
+
+    # 9. Return inventory
+    return inventory
+
+
+# Function for Option 5
+def save_Inventory(inventory):
+    '''
+    1. Find the inventory file
+    2. Save to inventory.json
+    3. Display success message
+    '''
+
+    # 1. Find the Inventory File
+    file = open(".\\inventory.json", "w")
+
+    # 2. Save to inventory.json
+    json.dump(inventory, file)
+    file.close()
+
+    # 3. Display success message
+    print("Inventory saved successfully to inventory.json")
+
+
+
+'''
+Program Flow
+1. Display App Title
+2. Load inventory into a list/dictionary
+3. Loop While NOT 'Exit'
+4. Display Menu
+5. Get User Input
+6. Carry Out The Option
+7. Display Thank you message.
+'''
+
+# Initialize Variables
+user_Input = -1
+
+# 1. Display App Title
+print("==============================\n" +
+      "INVENTORY MANAGEMENT SYSTEM\n" +
+      "==============================\n")
+
+# 2. Load Inventory
+inventory = load_inventory()
+
+# 3. Loop While NOT 'Exist'
+while user_Input != 6:
+    # 4. Display Menu
+    print("---------- MENU ----------\n" + 
+          "1. Display All Products\n" +
+          "2. Add Product\n" +
+          "3. Update Stock\n" +
+          "4. Search Product\n" +
+          "5. Save Inventory\n" +
+          "6. Exit\n" +
+          "--------------------------\n")
+
+    # 5. Get User Input
+    user_Input = get_Valid_Input()
+
+    # 6. Carry out functions based on option
+    match user_Input:
+        case 1:
+            display_All_Products(inventory)
+        case 2:
+            inventory = add_Product(inventory)
+        case 3:
+            inventory = update_Stock(inventory)
+        case 5:
+            print("\nSaving inventory...")
+            save_Inventory(inventory)
+        case 6: 
+            print("\nSaving inventory before exit")
+            save_Inventory(inventory)
+# 7. Display Thank You Message
+print("Thank you for using Inventory Management System.\nProgram terminated.")
