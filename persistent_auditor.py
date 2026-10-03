@@ -165,6 +165,44 @@ def update_Stock(inventory):
     # 9. Return inventory
     return inventory
 
+# Function for Option 4
+def search_Product(inventory):
+    '''
+    1. Display "Search Product"
+    2. Prompt user for product id
+    3. Search through inventory for a matching ID
+    4. If not found, print missing message and exit
+    5. If found, print product details
+    '''
+    # 1. Display "Search Product"
+    print("\nSearch Product")
+
+    # 2. Prompt for Product ID
+    product_ID_Search = input("Enter Product ID: ").strip().lower()
+
+    # 3. Search through inventory for a matching ID
+    match_Found = None
+    index_In_Inventory = -1
+    for product in inventory:
+        index_In_Inventory +=1
+        if product_ID_Search == product["ID"].lower():
+            match_Found = product
+            break;
+
+    # 4. If not found, print missing message and exit
+    if match_Found == None:
+        print("Product not found.")
+        return
+
+    # 5. If found, print product details
+    print("\nProduct Found\n" +
+          "----------------------------------------" +
+          "\nID: " + match_Found["ID"] +
+          "\nName: " + match_Found["Name"] +
+          "\nPrice: " + match_Found["Price"] +
+          "\nStock: " + match_Found["Stock"] +
+          "\n----------------------------------------\n")
+    
 
 # Function for Option 5
 def save_Inventory(inventory):
@@ -231,6 +269,8 @@ while user_Input != 6:
             inventory = add_Product(inventory)
         case 3:
             inventory = update_Stock(inventory)
+        case 4:
+            search_Product(inventory)
         case 5:
             print("\nSaving inventory...")
             save_Inventory(inventory)
