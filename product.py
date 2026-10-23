@@ -11,6 +11,21 @@ class Product:
         #                accessing the attribute.
         return self.__productid
 
+    def get_name(self):
+        # Encapsulation: Developers use this public method instead of directly
+        #                accessing the attribute.
+        return self.__name
+
+    def get_price(self):
+        # Encapsulation: Developers use this public method instead of directly
+        #                accessing the attribute.
+        return self.__price
+
+    def get_stock(self):
+        # Encapsulation: Developers use this public method instead of directly
+        #                accessing the attribute.
+        return self.__stock
+
     def update_stock(self, quantity:int):
         # Encapsulation: Developers use this public method instead of directly
         #                accessing the attribute to update the stock.
@@ -20,5 +35,5 @@ class Product:
         # Print the attributes of the Product object.
         print("ID: " + self.__productid + "|" +
                       "Name: " + self.__name + "|" +
-                      "Price: $" + self.__price + "|" + 
-                      "Stock: " + self.__stock)
+                      "Price: $" + str(self.__price) + "|" + 
+                      "Stock: " + str(self.__stock))

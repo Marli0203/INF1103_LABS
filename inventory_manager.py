@@ -1,4 +1,6 @@
 from pathlib import Path
+from product import Product
+from inventory import Inventory
 import json
 
 def load_inventory():
@@ -10,7 +12,7 @@ def load_inventory():
     3.  Load the inventory.
     4.  Return the inventory list.
     '''
-    inventory = None
+    inventory_json = None
     
     # Step 1.
     inventory_Path = Path(".\\inventory.json")
@@ -20,7 +22,7 @@ def load_inventory():
         # If file exists
         print("inventory.json found.")
         file = open(".\\inventory.json", "r")
-        inventory = json.load(file)
+        inventory_json = json.load(file)
         file.close()
     else:
         # If file does not exist
@@ -34,13 +36,19 @@ def load_inventory():
         
         # Load transaction history
         file = open(".\\inventory.json", "r")
-        inventory = json.load(file)
+        inventory_json = json.load(file)
         file.close()
 
     # Step 3. Load into inventory
+    products = []
+    for product_json in inventory_json:
+        products.append(Product(product_json["ID"],
+                                product_json["Name"],
+                                float(product_json["Price"]),
+                                int(product_json["Stock"])))
     print("Inventory loaded successfully.\n")
 
-    return inventory
+    return Inventory(products)
 
 def get_Valid_Input():
     '''
@@ -62,32 +70,28 @@ def get_Valid_Input():
     return int(user_Input)
 
 # Function for Option 1
-def display_All_Products(inventory):
+def display_All_Products(inventory: Inventory):
     '''
     1. Display "Current Inventory" title and top line
-    2. Loop through inventory and print product
+    2. Display all products
     3. Display the bottom line
     '''
     # 1. Display title and line
     print("Current Inventory\n" +
           "----------------------------------------")
 
-    # 2. Loop through inventory and print product
-    for product in inventory:
-        print("ID: " + product["ID"] + "|" +
-              "Name: " + product["Name"] + "|" +
-              "Price: $" + product["Price"] + "|" + 
-              "Stock: " + product["Stock"])
+    # 2. Display all products
+    inventory.display_all()
 
     # 3. Print bottom line
     print("----------------------------------------\n")
 
 # Function for Option 2
-def add_Product(inventory):
+def add_Product(inventory: Inventory):
     '''
     1. Display "Add New Product"
     2. Prompt for the inputs
-    3. Compile into a dictionary
+    3. Compile into a Product object
     4. Add to inventory
     5. Display "product added successfully!
     '''
@@ -100,14 +104,14 @@ def add_Product(inventory):
     price = input("Price: ").lower().strip()
     stock_Quantity = input("Stock: ").lower().strip()
 
-    # 3. Compile data into a dictionary
-    product_Data = {"ID" : product_ID,
-                    "Name" : product_Name,
-                    "Price" : price,
-                    "Stock" : stock_Quantity}
+    # 3. Compile data into a Product object
+    product_obj = Product(product_ID,
+                          product_Name,
+                          float(price),
+                          int(stock_Quantity))
 
     # 4. Add to inventory
-    inventory.append(product_Data)
+    inventory.add_product(product_obj)
 
     # 5. Print Success Message
     print("Product added successfully!")
@@ -116,7 +120,7 @@ def add_Product(inventory):
     return inventory
 
 # Function for Option 3
-def update_Stock(inventory):
+def update_Stock(inventory: Inventory):
     '''
     1. Display "Update Stock"
     2. Prompt for product id
@@ -135,13 +139,7 @@ def update_Stock(inventory):
     product_ID_Search = input("Enter Product ID: ").strip().lower()
 
     # 3. Search through inventory for a matching ID
-    match_Found = None
-    index_In_Inventory = -1
-    for product in inventory:
-        index_In_Inventory +=1
-        if product_ID_Search == product["ID"].lower():
-            match_Found = product
-            break;
+    match_Found = inventory.search_product(product_ID_Search)
 
     # 4. If not found, show missing message then exit
     if match_Found == None:
@@ -150,14 +148,14 @@ def update_Stock(inventory):
 
     # 5. If found, display product details
     print("\nProduct Found:" + 
-          "\nName: " + match_Found["Name"] +
-          "\nCurrent Stock: " + match_Found["Stock"] + "\n")
+          "\nName: " + match_Found.get_name() +
+          "\nCurrent Stock: " + str(match_Found.get_stock()) + "\n")
 
     # 6. Prompt for Stock Quantity (New)
     new_Stock = input("New Stock Quantity: ").strip()
 
     # 7. Update Stock Quantity
-    inventory[index_In_Inventory]["Stock"] = new_Stock
+    inventory.search_product(product_ID_Search).update_stock(new_Stock)
 
     # 8. Display successful message
     print("Stock updated successfully!")
@@ -166,7 +164,7 @@ def update_Stock(inventory):
     return inventory
 
 # Function for Option 4
-def search_Product(inventory):
+def search_Product(inventory: Inventory):
     '''
     1. Display "Search Product"
     2. Prompt user for product id
@@ -181,13 +179,7 @@ def search_Product(inventory):
     product_ID_Search = input("Enter Product ID: ").strip().lower()
 
     # 3. Search through inventory for a matching ID
-    match_Found = None
-    index_In_Inventory = -1
-    for product in inventory:
-        index_In_Inventory +=1
-        if product_ID_Search == product["ID"].lower():
-            match_Found = product
-            break;
+    match_Found = inventory.search_product(product_ID_Search)
 
     # 4. If not found, print missing message and exit
     if match_Found == None:
@@ -197,15 +189,15 @@ def search_Product(inventory):
     # 5. If found, print product details
     print("\nProduct Found\n" +
           "----------------------------------------" +
-          "\nID: " + match_Found["ID"] +
-          "\nName: " + match_Found["Name"] +
-          "\nPrice: " + match_Found["Price"] +
-          "\nStock: " + match_Found["Stock"] +
+          "\nID: " + match_Found.get_productid() +
+          "\nName: " + match_Found.get_name() +
+          "\nPrice: " + str(match_Found.get_price()) +
+          "\nStock: " + str(match_Found.get_stock()) +
           "\n----------------------------------------\n")
     
 
 # Function for Option 5
-def save_Inventory(inventory):
+def save_Inventory(inventory: Inventory):
     '''
     1. Find the inventory file
     2. Save to inventory.json
@@ -216,7 +208,14 @@ def save_Inventory(inventory):
     file = open(".\\inventory.json", "w")
 
     # 2. Save to inventory.json
-    json.dump(inventory, file)
+    inventory_json = []
+    for product in inventory.get_inventory_list():
+        inventory_json.append({"ID": product.get_productid(),
+                               "Name": product.get_name(),
+                               "Price": str(product.get_price()),
+                               "Stock": str(product.get_stock())})
+    
+    json.dump(inventory_json, file)
     file.close()
 
     # 3. Display success message
