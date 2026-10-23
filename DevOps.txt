@@ -1,0 +1,13 @@
+This file contains the relevant docker commands for ease of reference.
+
+Docker Mount and Run:
+docker run --rm -it -v "${PWD}:/usr/src/app" -w /usr/src/app python:3.11-slim python inventory_manager.py
+
+Docker List of Images:
+docker images
+
+Docker Build Custom Image:
+docker build -t [image name] .
+
+Docker Run Custom Image:
+docker run --rm -it [image name]
