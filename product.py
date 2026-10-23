@@ -6,6 +6,11 @@ class Product:
         self.__price = price
         self.__stock = stock
 
+    def get_productid(self):
+        # Encapsulation: Developers use this public method instead of directly
+        #                accessing the attribute.
+        return self.__productid
+
     def update_stock(self, quantity:int):
         # Encapsulation: Developers use this public method instead of directly
         #                accessing the attribute to update the stock.
