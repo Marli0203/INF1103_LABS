@@ -244,12 +244,6 @@ def save_Inventory(inventory: Inventory):
                                     "Stock": str(product.get_stock()),
                                     "ProductType": "Digital",
                                     "DownloadSize": product.get_download_size()})
-
-            
-        inventory_json.append({"ID": product.get_productid(),
-                               "Name": product.get_name(),
-                               "Price": str(product.get_price()),
-                               "Stock": str(product.get_stock())})
     
     json.dump(inventory_json, file)
     file.close()
