@@ -12,3 +12,6 @@ venv/
 # IDE settings
 .vscode/
 .idea/
+
+# DevOps Guide
+DevOps.txt
