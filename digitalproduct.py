@@ -17,3 +17,6 @@ class DigitalProduct(Product):
     # This method implements the abstract method from the parent class
     def get_fulfillment_info(self):
             print("This is a digital product which is delivered digitally.")
+
+    def get_download_size(self):
+         return self.__download_size
