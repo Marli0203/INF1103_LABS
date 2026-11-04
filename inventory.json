@@ -1,1 +1,1 @@
-[{"ID": "P001", "Name": "Laptop", "Price": "1200.0", "Stock": "40", "ProductType": "Physical", "Weight": 5.0}, {"ID": "P001", "Name": "Laptop", "Price": "1200.0", "Stock": "40"}, {"ID": "P002", "Name": "Mouse", "Price": "30.0", "Stock": "50", "ProductType": "Physical", "Weight": 0.25}, {"ID": "P002", "Name": "Mouse", "Price": "30.0", "Stock": "50"}]
+[{"ID": "P001", "Name": "Laptop", "Price": "1200.0", "Stock": "40", "ProductType": "Physical", "Weight": 5.0}, {"ID": "P002", "Name": "Mouse", "Price": "30.0", "Stock": "60", "ProductType": "Physical", "Weight": 0.25}]
