@@ -1,4 +1,6 @@
-class Product:
+from abc import ABC, abstractmethod
+
+class Product(ABC):
     def __init__(self, productid:str, name:str, price:float, stock:int):
         # Initialize the attributes of a general Product object
         self.__productid = productid
@@ -37,3 +39,8 @@ class Product:
                       "Name: " + self.__name + "|" +
                       "Price: $" + str(self.__price) + "|" + 
                       "Stock: " + str(self.__stock), end="")
+
+    # Create the abstract method to force child classes to implement this
+    @abstractmethod
+    def get_fulfillment_info(self):
+        pass
