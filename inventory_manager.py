@@ -1,5 +1,7 @@
 from pathlib import Path
 from product import Product
+from physicalproduct import PhysicalProduct
+from digitalproduct import DigitalProduct
 from inventory import Inventory
 import json
 
@@ -42,10 +44,20 @@ def load_inventory():
     # Step 3. Load into inventory
     products = []
     for product_json in inventory_json:
-        products.append(Product(product_json["ID"],
-                                product_json["Name"],
-                                float(product_json["Price"]),
-                                int(product_json["Stock"])))
+        if (product_json["ProductType"] == "Physical"):
+            currentProduct = PhysicalProduct(product_json["ID"],
+                                            product_json["Name"],
+                                            float(product_json["Price"]),
+                                            int(product_json["Stock"]),
+                                            float(product_json["Weight"]))
+        elif (product_json["ProductType"] == "Digital"):
+            currentProduct = DigitalProduct(product_json["ID"],
+                                            product_json["Name"],
+                                            float(product_json["Price"]),
+                                            int(product_json["Stock"]),
+                                            float(product_json["DownloadSize"]))
+
+        products.append(currentProduct)
     print("Inventory loaded successfully.\n")
 
     return Inventory(products)
@@ -91,7 +103,7 @@ def add_Product(inventory: Inventory):
     '''
     1. Display "Add New Product"
     2. Prompt for the inputs
-    3. Compile into a Product object
+    3. Compile into a DigitalProduct/PhysicalProduct object
     4. Add to inventory
     5. Display "product added successfully!
     '''
@@ -104,14 +116,26 @@ def add_Product(inventory: Inventory):
     price = input("Price: ").lower().strip()
     stock_Quantity = input("Stock: ").lower().strip()
 
-    # 3. Compile data into a Product object
-    product_obj = Product(product_ID,
+    # 3. Compile data into a DigitalProduct/PhysicalProduct object
+    product_Type = input("Product Type (D/P): ").lower().strip()
+
+    if (product_Type == 'd'):
+        download_Size = input("Download Size (MB): ").lower().strip()
+        product_Obj = DigitalProduct(product_ID,
                           product_Name,
                           float(price),
-                          int(stock_Quantity))
+                          int(stock_Quantity),
+                          float(download_Size))
+    elif (product_Type == 'p'):
+        weight = input("Weight (KG): ").lower().strip()
+        product_Obj = PhysicalProduct(product_ID,
+                                  product_Name,
+                                  float(price),
+                                  int(stock_Quantity),
+                                  float(weight))
 
     # 4. Add to inventory
-    inventory.add_product(product_obj)
+    inventory.add_product(product_Obj)
 
     # 5. Print Success Message
     print("Product added successfully!")
@@ -147,9 +171,9 @@ def update_Stock(inventory: Inventory):
         return inventory
 
     # 5. If found, display product details
-    print("\nProduct Found:" + 
-          "\nName: " + match_Found.get_name() +
-          "\nCurrent Stock: " + str(match_Found.get_stock()) + "\n")
+    print("\nProduct Found:")
+    match_Found.display_information()
+    print("\n")
 
     # 6. Prompt for Stock Quantity (New)
     new_Stock = input("New Stock Quantity: ").strip()
@@ -187,13 +211,9 @@ def search_Product(inventory: Inventory):
         return
 
     # 5. If found, print product details
-    print("\nProduct Found\n" +
-          "----------------------------------------" +
-          "\nID: " + match_Found.get_productid() +
-          "\nName: " + match_Found.get_name() +
-          "\nPrice: " + str(match_Found.get_price()) +
-          "\nStock: " + str(match_Found.get_stock()) +
-          "\n----------------------------------------\n")
+    print("\nProduct Found:")
+    match_Found.display_information()
+    print("\n")
     
 
 # Function for Option 5
@@ -210,6 +230,22 @@ def save_Inventory(inventory: Inventory):
     # 2. Save to inventory.json
     inventory_json = []
     for product in inventory.get_inventory_list():
+        if (isinstance(product, PhysicalProduct)):
+            inventory_json.append({"ID": product.get_productid(),
+                                    "Name": product.get_name(),
+                                    "Price": str(product.get_price()),
+                                    "Stock": str(product.get_stock()),
+                                    "ProductType": "Physical",
+                                    "Weight": product.get_weight()})
+        elif (isinstance(product, DigitalProduct)):
+            inventory_json.append({"ID": product.get_productid(),
+                                    "Name": product.get_name(),
+                                    "Price": str(product.get_price()),
+                                    "Stock": str(product.get_stock()),
+                                    "ProductType": "Digital",
+                                    "DownloadSize": product.get_download_size()})
+
+            
         inventory_json.append({"ID": product.get_productid(),
                                "Name": product.get_name(),
                                "Price": str(product.get_price()),
