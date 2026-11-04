@@ -10,9 +10,6 @@ class DigitalProduct(Product):
 
     # This method overrides the method from the parent class
     def display_information(self):
-                # Print the attributes of the Product object.
-                print("ID: " + self.get_productid() + "|" +
-                              "Name: " + self.get_name() + "|" +
-                              "Price: $" + str(self.get_price()) + "|" + 
-                              "Stock: " + str(self.get_stock()) + "|" +
-                              "Download Size: " + str(self.__download_size))
+        # Print the attributes of the Product object.
+        super().display_information()
+        print("|" + "Download Size: " + str(self.__download_size))

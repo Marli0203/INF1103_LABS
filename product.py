@@ -36,4 +36,4 @@ class Product:
         print("ID: " + self.__productid + "|" +
                       "Name: " + self.__name + "|" +
                       "Price: $" + str(self.__price) + "|" + 
-                      "Stock: " + str(self.__stock))
+                      "Stock: " + str(self.__stock), end="")

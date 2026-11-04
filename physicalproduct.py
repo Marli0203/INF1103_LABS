@@ -11,8 +11,5 @@ class PhysicalProduct(Product):
     # This method overrides the method from the parent class
     def display_information(self):
             # Print the attributes of the Product object.
-            print("ID: " + self.get_productid() + "|" +
-                          "Name: " + self.get_name() + "|" +
-                          "Price: $" + str(self.get_price()) + "|" + 
-                          "Stock: " + str(self.get_stock()) + "|" +
-                          "Weight: " + str(self.__weight))
+            super().display_information()
+            print("|" + "Weight (KG): " + str(self.__weight))
