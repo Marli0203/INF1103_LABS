@@ -26,4 +26,8 @@ class PhysicalProduct(Product, CanBeShipped):
         else:
             multiplier = 0.3
         return self.__weight * multiplier
+
+    # This method implements the abstract method from the parent class
+    def get_fulfillment_info(self):
+        print("This is a physical product which requires shipping.")
         
