@@ -7,17 +7,17 @@ class DigitalProduct(Product):
         super().__init__(productid, name, price, stock, supplier)
 
         # Initialize the child class attributes
-        self.__download_size = download_size
+        self.__download_size: float = download_size
 
     # This method overrides the method from the parent class
-    def display_information(self):
+    def display_information(self) -> None:
         # Print the attributes of the Product object.
         super().display_information()
         print("|" + "Download Size: " + str(self.__download_size))
 
     # This method implements the abstract method from the parent class
-    def get_fulfillment_info(self):
+    def get_fulfillment_info(self) -> None:
             print("This is a digital product which is delivered digitally.")
 
-    def get_download_size(self):
+    def get_download_size(self) -> float:
          return self.__download_size

@@ -8,17 +8,17 @@ class PhysicalProduct(Product, CanBeShipped):
         super().__init__(productid, name, price, stock, supplier)
 
         # Initialize child class attributes
-        self.__weight = weight
+        self.__weight: float = weight
 
     # This method overrides the method from the parent class
-    def display_information(self):
+    def display_information(self) -> None:
             # Print the attributes of the Product object.
             super().display_information()
             print("|" + "Weight (KG): " + str(self.__weight))
 
     # Implementation of the abstract method from CanBeShipped interface
     # using our own implementation of shipping cost calculation
-    def calculate_shipping_cost(self):
+    def calculate_shipping_cost(self) -> float:
         multiplier = 0
         if (2 < self.__weight <= 5):
             multiplier = 0.1
@@ -29,8 +29,8 @@ class PhysicalProduct(Product, CanBeShipped):
         return self.__weight * multiplier
 
     # This method implements the abstract method from the parent class
-    def get_fulfillment_info(self):
+    def get_fulfillment_info(self) -> None:
         print("This is a physical product which requires shipping.")
 
-    def get_weight(self):
+    def get_weight(self) -> float:
         return self.__weight

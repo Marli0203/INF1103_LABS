@@ -4,43 +4,43 @@ from supplier import Supplier
 class Product(ABC):
     def __init__(self, productid:str, name:str, price:float, stock:int, supplier: Supplier):
         # Initialize the attributes of a general Product object
-        self.__productid = productid
-        self.__name = name
-        self.__price = price
-        self.__stock = stock
-        self.__supplier : Supplier = supplier
+        self.__productid: str = productid
+        self.__name: str = name
+        self.__price: float = price
+        self.__stock: int = stock
+        self.__supplier: Supplier = supplier
 
-    def get_productid(self):
+    def get_productid(self) -> str:
         # Encapsulation: Developers use this public method instead of directly
         #                accessing the attribute.
         return self.__productid
 
-    def get_name(self):
+    def get_name(self) -> str:
         # Encapsulation: Developers use this public method instead of directly
         #                accessing the attribute.
         return self.__name
 
-    def get_price(self):
+    def get_price(self) -> float:
         # Encapsulation: Developers use this public method instead of directly
         #                accessing the attribute.
         return self.__price
 
-    def get_stock(self):
+    def get_stock(self) -> int:
         # Encapsulation: Developers use this public method instead of directly
         #                accessing the attribute.
         return self.__stock
 
-    def update_stock(self, quantity:int):
+    def update_stock(self, quantity:int) -> None:
         # Encapsulation: Developers use this public method instead of directly
         #                accessing the attribute to update the stock.
         self.__stock = quantity
 
-    def get_supplier(self):
+    def get_supplier(self) -> Supplier:
         # Encapsulation: Developers use this public method instead of directly
         #                accessing the attribute to update the stock.
         return self.__supplier
 
-    def display_information(self):
+    def display_information(self) -> None:
         # Print the attributes of the Product object.
         print("ID: " + self.__productid + "|" +
                       "Name: " + self.__name + "|" +

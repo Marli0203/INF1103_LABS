@@ -5,10 +5,10 @@ class Inventory:
         # To track product objects in a list
         self.__inventory_list : list[Product] = inventory_list
 
-    def get_inventory_list(self):
+    def get_inventory_list(self) -> list[Product]:
          return self.__inventory_list
 
-    def add_product(self, product:Product):
+    def add_product(self, product:Product) -> None:
         self.__inventory_list.append(product)
 
     def search_product(self, product_id:str) -> Product | None:
@@ -17,13 +17,13 @@ class Inventory:
                 return product
         return None
 
-    def remove_product(self, product_id: str):
+    def remove_product(self, product_id: str) -> None:
         for product in self.__inventory_list:
              if product_id.lower() == product.get_productid().lower():
                  self.__inventory_list.remove(product)
                  break
 
-    def display_all(self):
+    def display_all(self) -> None:
         for product in self.__inventory_list:
              product.display_information()
              product.get_fulfillment_info()
