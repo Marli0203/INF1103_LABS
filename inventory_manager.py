@@ -3,6 +3,7 @@ from product import Product
 from physicalproduct import PhysicalProduct
 from digitalproduct import DigitalProduct
 from inventory import Inventory
+from supplier import Supplier
 import json
 
 def load_inventory():
@@ -44,17 +45,22 @@ def load_inventory():
     # Step 3. Load into inventory
     products = []
     for product_json in inventory_json:
+        supplierObj = Supplier(product_json["SupplierID"],
+                               product_json["SupplierName"],
+                               product_json["SupplierContactEmail"])
         if (product_json["ProductType"] == "Physical"):
             currentProduct = PhysicalProduct(product_json["ID"],
                                             product_json["Name"],
                                             float(product_json["Price"]),
                                             int(product_json["Stock"]),
+                                            supplierObj,
                                             float(product_json["Weight"]))
         elif (product_json["ProductType"] == "Digital"):
             currentProduct = DigitalProduct(product_json["ID"],
                                             product_json["Name"],
                                             float(product_json["Price"]),
                                             int(product_json["Stock"]),
+                                            supplierObj,
                                             float(product_json["DownloadSize"]))
 
         products.append(currentProduct)
@@ -116,8 +122,13 @@ def add_Product(inventory: Inventory):
     price = input("Price: ").lower().strip()
     stock_Quantity = input("Stock: ").lower().strip()
 
+    supplierID = input("Supplier ID: ").strip()
+    supplierName = input("Supplier Name: ").strip()
+    supplierContactEmail = input("Supplier Contact Email: ").strip()
+
     # 3. Compile data into a DigitalProduct/PhysicalProduct object
     product_Type = input("Product Type (D/P): ").lower().strip()
+    supplierObj = Supplier(supplierID, supplierName, supplierContactEmail)
 
     if (product_Type == 'd'):
         download_Size = input("Download Size (MB): ").lower().strip()
@@ -125,6 +136,7 @@ def add_Product(inventory: Inventory):
                           product_Name,
                           float(price),
                           int(stock_Quantity),
+                          supplierObj,
                           float(download_Size))
     elif (product_Type == 'p'):
         weight = input("Weight (KG): ").lower().strip()
@@ -132,6 +144,7 @@ def add_Product(inventory: Inventory):
                                   product_Name,
                                   float(price),
                                   int(stock_Quantity),
+                                  supplierObj,
                                   float(weight))
 
     # 4. Add to inventory
@@ -231,19 +244,26 @@ def save_Inventory(inventory: Inventory):
     inventory_json = []
     for product in inventory.get_inventory_list():
         if (isinstance(product, PhysicalProduct)):
+            supplierObj = product.get_supplier()
             inventory_json.append({"ID": product.get_productid(),
                                     "Name": product.get_name(),
                                     "Price": str(product.get_price()),
                                     "Stock": str(product.get_stock()),
                                     "ProductType": "Physical",
-                                    "Weight": product.get_weight()})
+                                    "Weight": product.get_weight(),
+                                    "SupplierID": supplierObj.get_supplier_id(),
+                                    "SupplierName": supplierObj.get_name(),
+                                    "SupplierContactEmail": supplierObj.get_contact_email()})
         elif (isinstance(product, DigitalProduct)):
             inventory_json.append({"ID": product.get_productid(),
                                     "Name": product.get_name(),
                                     "Price": str(product.get_price()),
                                     "Stock": str(product.get_stock()),
                                     "ProductType": "Digital",
-                                    "DownloadSize": product.get_download_size()})
+                                    "DownloadSize": product.get_download_size(),
+                                    "SupplierID": supplierObj.get_supplier_id(),
+                                    "SupplierName": supplierObj.get_name(),
+                                    "SupplierContactEmail": supplierObj.get_contact_email()})
     
     json.dump(inventory_json, file)
     file.close()
