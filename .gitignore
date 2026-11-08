@@ -15,3 +15,6 @@ venv/
 
 # DevOps Guide
 DevOps.txt
+
+# Test Code
+testCode.py
