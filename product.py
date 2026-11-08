@@ -1,12 +1,14 @@
 from abc import ABC, abstractmethod
+from supplier import Supplier
 
 class Product(ABC):
-    def __init__(self, productid:str, name:str, price:float, stock:int):
+    def __init__(self, productid:str, name:str, price:float, stock:int, supplier: Supplier):
         # Initialize the attributes of a general Product object
         self.__productid = productid
         self.__name = name
         self.__price = price
         self.__stock = stock
+        self.__supplier : Supplier = supplier
 
     def get_productid(self):
         # Encapsulation: Developers use this public method instead of directly
@@ -32,6 +34,11 @@ class Product(ABC):
         # Encapsulation: Developers use this public method instead of directly
         #                accessing the attribute to update the stock.
         self.__stock = quantity
+
+    def get_supplier(self):
+        # Encapsulation: Developers use this public method instead of directly
+        #                accessing the attribute to update the stock.
+        return self.__supplier
 
     def display_information(self):
         # Print the attributes of the Product object.
