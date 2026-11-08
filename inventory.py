@@ -26,3 +26,4 @@ class Inventory:
     def display_all(self):
         for product in self.__inventory_list:
              product.display_information()
+             product.get_fulfillment_info()
