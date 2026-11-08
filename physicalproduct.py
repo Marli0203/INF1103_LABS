@@ -1,10 +1,11 @@
 from product import Product
 from canbeshipped import CanBeShipped
+from supplier import Supplier
 
 class PhysicalProduct(Product, CanBeShipped):
-    def __init__(self, productid:str, name:str, price:float, stock:int, weight:float):
+    def __init__(self, productid:str, name:str, price:float, stock:int, supplier: Supplier, weight:float):
         # Initialize parent class attributes
-        super().__init__(productid, name, price, stock)
+        super().__init__(productid, name, price, stock, supplier)
 
         # Initialize child class attributes
         self.__weight = weight
@@ -33,4 +34,3 @@ class PhysicalProduct(Product, CanBeShipped):
 
     def get_weight(self):
         return self.__weight
-        

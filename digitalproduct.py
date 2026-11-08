@@ -1,9 +1,10 @@
 from product import Product
+from supplier import Supplier
 
 class DigitalProduct(Product):
-    def __init__(self, productid:str, name:str, price:float, stock:int, download_size: float):
+    def __init__(self, productid:str, name:str, price:float, stock:int, supplier: Supplier, download_size: float):
         # Initialize the parent class attributes
-        super().__init__(productid, name, price, stock)
+        super().__init__(productid, name, price, stock, supplier)
 
         # Initialize the child class attributes
         self.__download_size = download_size
